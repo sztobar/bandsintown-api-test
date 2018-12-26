@@ -3,10 +3,10 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "lib": ["dom", "es2017"],
-    "module": "esnext",
+    "lib": ["dom", "es2015", "es2017"],
+    "module": "commonjs",
     "moduleResolution": "node",
-    "noEmit": true,
+    "noEmit": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "preserveConstEnums": true,
@@ -14,6 +14,13 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext"
-  }
+    "target": "esnext",
+    "outDir": "./dist",
+  },
+  "include": [
+    "server/*",
+    "services/*",
+    "utils/*",
+  ],
+  "exclude": ["node_modules", "dist", ".next"]
 }

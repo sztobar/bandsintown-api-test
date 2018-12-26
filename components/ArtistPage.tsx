@@ -15,6 +15,7 @@ import '../styles/artistPage.css'
 interface ArtistPageProps {
   initialArtistName: string
   initialArtist: ArtistWithEventsModel | null
+  initialError: string | null
 }
 
 interface ArtistPageState {
@@ -24,27 +25,40 @@ interface ArtistPageState {
   loading: boolean
 }
 
+const isClient = typeof window !== 'undefined';
+
 export class ArtistPage extends React.Component<
   ArtistPageProps,
   ArtistPageState
-  > {
+> {
   static async getInitialProps(nextContext: NextContext) {
-    try {
-      if (
-        nextContext.query.artistName &&
-        typeof nextContext.query.artistName === 'string'
-      ) {
-        const artistName = nextContext.query.artistName
+    if (isClient) {
+      return {}
+    }
+    if (
+      nextContext.query.artistName &&
+      typeof nextContext.query.artistName === 'string'
+    ) {
+      const artistName = nextContext.query.artistName
+      try {
         const artist = await ArtistService.fetchArtistWithEvents(artistName)
         return {
           initialArtist: artist,
           initialArtistName: artistName,
+          initialError: null,
+        }
+      } catch (error) {
+        return {
+          initialArtist: null,
+          initialError: error,
+          initialArtistName: artistName,
         }
       }
-    } catch (e) { }
+    }
     return {
       initialArtist: null,
       initialArtistName: '',
+      initialError: null,
     }
   }
 
@@ -52,7 +66,7 @@ export class ArtistPage extends React.Component<
     artistName: this.props.initialArtistName,
     artist: this.props.initialArtist,
     loading: false,
-    error: null
+    error: this.props.initialError,
   }
 
   deferSetState = <Key extends keyof ArtistPageState>(
@@ -63,11 +77,11 @@ export class ArtistPage extends React.Component<
 
   handleChange = async (artistName: string) => {
     await this.deferSetState({ artistName, error: null, loading: true })
+    Router.push({ pathname: Router.pathname, query: { artistName } })
     try {
       const artist = await ArtistService.fetchArtistWithEvents(
         this.state.artistName
       )
-      Router.push({ pathname: Router.pathname, query: { artistName } })
       this.setState({ artist, loading: false })
     } catch (error) {
       this.setState({
@@ -94,17 +108,17 @@ export class ArtistPage extends React.Component<
           onChange={this.handleChange}
         />
         {(() => {
-            switch (true) {
-              case this.state.loading:
-                return <LoadingMessage />
-              case this.state.error !== null:
-                return <ErrorMessage error={this.state.error!} />
-              case this.state.artist !== null:
-                return <ArtistView data={this.state.artist!} />
-              default:
-                return <NoArtistView artistName={this.state.artistName} />
-            }
-          })()}
+          switch (true) {
+            case this.state.loading:
+              return <LoadingMessage />
+            case this.state.error != null:
+              return <ErrorMessage error={this.state.error!} />
+            case this.state.artist != null:
+              return <ArtistView data={this.state.artist!} />
+            default:
+              return <NoArtistView artistName={this.state.artistName} />
+          }
+        })()}
       </main>
     )
   }

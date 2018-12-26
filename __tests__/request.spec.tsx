@@ -22,42 +22,30 @@ describe('request function', function() {
 
   it('should reject with message if response contains error property', function() {
     const errorObject = {error: 'error'}
-    async function jsonResolver() {
-      return errorObject
+    function textResolver() {
+      return JSON.stringify(errorObject)
     }
-    const mockResponse = { status: 200, json: jsonResolver }
+    const mockResponse = { status: 200, text: textResolver }
     mockFetch.mockResolvedValue(mockResponse)
     const responsePromise = request('')
     return expect(responsePromise).rejects.toBe(errorObject.error)
   })
 
-  it('should reject with string message if request rejects with an error', function() {
-    const requestError = new Error('ErrorMessage')
+  it('should reject with string message if request resolves with a string', function() {
+    const requestError = 'ErrorMessage'
     mockFetch.mockRejectedValue(requestError)
     const responsePromise = request('')
-    return expect(responsePromise).rejects.toBe(requestError.message)
-  })
-
-  it('should resolve to null if response is an empty string', function() {
-    async function jsonResolver() {
-      try {
-        return JSON.parse('')
-      } catch (e) { throw e }
-    }
-    const mockResponse = { status: 200, json: jsonResolver }
-    mockFetch.mockResolvedValue(mockResponse)
-    const responsePromise = request('')
-    return expect(responsePromise).resolves.toBe(null)
+    return expect(responsePromise).rejects.toBe(requestError)
   })
 
   it('should resolve successfully', function() {
     const response = { response: 'successfull' }
-    async function jsonResolver() {
-      return response
+    function textResolver() {
+      return JSON.stringify(response)
     }
-    const mockResponse = { status: 200, json: jsonResolver }
+    const mockResponse = { status: 200, text: textResolver }
     mockFetch.mockResolvedValue(mockResponse)
     const responsePromise = request('')
-    return expect(responsePromise).resolves.toBe(response)
+    return expect(responsePromise).resolves.toEqual(response)
   })
 })

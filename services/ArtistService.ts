@@ -1,6 +1,7 @@
 import { request } from '../utils/request'
 import * as urls from '../utils/urls'
 import { renderDate, renderTime } from '../utils/datetime'
+import { CacheServiceClass } from './CacheServiceClass'
 
 export interface ArtistWithEventsModel {
   artist: ArtistInfoModel
@@ -34,27 +35,56 @@ interface ArtistEventVenueResponse {
   country: string
 }
 
+const isServer = typeof window === 'undefined'
+
 class ArtistServiceClass {
 
-  async fetchArtistWithEvents(
+  cacheService = new CacheServiceClass<ArtistWithEventsModel | null>(isServer)
+
+  async fetchArtistWithEvents(artistName: string) {
+    if (this.cacheService.has(artistName)) {
+      return this.cacheService.get(artistName)
+    }
+    const artist = await this.fetchArtistWithEventsImplementation(artistName)
+    this.cacheService.set(artistName, artist)
+    return artist
+  }
+
+  fetchArtistWithEventsImplementation(artistName: string) {
+    return isServer
+      ? this.serverFetchArtistWithEventsImplementation(artistName)
+      : this.clientFetchArtistWithEventsImplementation(artistName)
+  }
+
+  async serverFetchArtistWithEventsImplementation(
     artistName: string
   ): Promise<ArtistWithEventsModel | null> {
     const [artist, events] = await Promise.all([
       this.fetchArtist(artistName),
       this.fetchArtistEvents(artistName),
     ])
-    if (artist !== null && events !== null) {
+    if (artist != null && events != null) {
       return { artist, events }
     }
     return null
+  }
+
+  async clientFetchArtistWithEventsImplementation(artistName: string) {
+    return request<ArtistWithEventsModel>(
+      `${window.location.origin}/api/artist/${artistName}`
+    )
   }
 
   async fetchArtist(artistName: string): Promise<ArtistInfoModel | null> {
     return request<ArtistInfoModel>(urls.artistInfo(artistName))
   }
 
-  async fetchArtistEvents(artistName: string): Promise<ArtistEventModel[] | null> {
-    const events = await request<ArtistEventResponse[]>(urls.artistEvents(artistName))
+  async fetchArtistEvents(
+    artistName: string
+  ): Promise<ArtistEventModel[] | null> {
+    const events = await request<ArtistEventResponse[]>(
+      urls.artistEvents(artistName)
+    )
     return events !== null ? this.parseEventsResponse(events) : null
   }
 
