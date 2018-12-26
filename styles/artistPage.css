@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=News+Cycle');
+@import url('https://fonts.googleapis.com/css?family=Merriweather+Sans');
+
+:root {
+  --error-text-color: darkred;
+
+  --strong-text-color: #222;
+  --medium-text-color: #4a4a4a;
+  --light-text-color: #6e6e6e;
+
+  --hover-color: lightgray;
+
+  --title-font-family: 'News Cycle', sans-serif;
+  --body-font-family: 'Merriweather Sans', sans-serif;
+}
+
+.artist-page {
+  margin: 0 auto;
+  width: 960px;
+}
+
+.artist-page__header {
+  margin: 36px auto 18px;
+}
+
+.artist-page__heading {
+  margin-bottom: 18px;
+  font-size: 36px;
+  font-family: var(--title-font-family);
+  color: var(--strong-text-color);
+}
+
+.artist-page__description {
+  font-size: 16px;
+  font-family: var(--body-font-family);
+  color: var(--medium-text-color);
+}

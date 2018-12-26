@@ -1,0 +1,110 @@
+.artist-view__title {
+  margin: 18px 0;
+  font-size: 24px;
+  font-family: var(--title-font-family);
+  color: var(--strong-text-color);
+}
+
+.artist-view__info {
+  padding: 5px;
+  border: 1px solid black;
+  margin: 10px 0;
+  display: grid;
+  grid-template-areas:
+    'figure name'
+    'figure facebook';
+}
+
+.artist-view__figure {
+  grid-area: figure;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.artist-view__image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.artist-view__name {
+  grid-area: name;
+  margin: 18px 0;
+  font-size: 24px;
+  font-family: var(--title-font-family);
+  color: var(--light-text-color);
+}
+
+.artist-view__facebook {
+  grid-area: facebook;
+}
+
+.artist-view__link {
+  font-size: 16px;
+  font-family: var(--body-font-family);
+  font-weight: bold;
+}
+
+.artist-view__no-link-message {
+  font-size: 16px;
+  font-family: var(--body-font-family);
+}
+
+.artist-view__events {
+  grid-area: events;
+}
+
+.artist-event {
+  display: flex;
+  align-content: flex-end;
+  margin: 10px 0;
+  padding: 5px;
+  border: 1px solid black;
+  line-height: 1.5em;
+}
+
+.artist-event__label {
+  font-weight: bold;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  color: var(--medium-text-color);
+}
+
+.artist-event__content {
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  color: var(--light-text-color);
+}
+
+.artist-event__where {
+  flex: 2;
+  margin: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.artist-event__venue {
+  flex: 2;
+  margin: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.artist-event__date {
+  flex: 1;
+  margin: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.artist-event__time {
+  flex: 1;
+  margin: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+}
