@@ -10,9 +10,11 @@ describe('CacheServiceClass', function() {
     it('should not remember records older than 1 day', function() {
       const cacheService = new CacheServiceClass(isServer)
       cacheService.set('key', 'value')
+      const originalDateNow = Date.now
       const now = Date.now()
       Date.now = jest.fn(() => now + DAY + 1)
       expect(cacheService.has('key')).toBe(false)
+      Date.now = originalDateNow
     })
 
     it('should not remember records younger than 1 day', function() {
@@ -34,9 +36,11 @@ describe('CacheServiceClass', function() {
     it('should not remember records older than 1 hour', function() {
       const cacheService = new CacheServiceClass(isServer)
       cacheService.set('key', 'value')
+      const originalDateNow = Date.now
       const now = Date.now()
       Date.now = jest.fn(() => now + HOUR + 1)
       expect(cacheService.has('key')).toBe(false)
+      Date.now = originalDateNow
     })
 
     it('should not remember records younger than 1 hour', function() {

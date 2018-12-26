@@ -14,12 +14,12 @@ npm install
 
 ### To run all tests
 ```
-npm test
+npm run test
 ```
 
 ### To run all tests in watch mode
 ```
-npm test:watch
+npm run test:watch
 ```
 
 ### To run application in development mode
